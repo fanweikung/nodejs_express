@@ -1,0 +1,6 @@
+*.txt
+*.zip
+*.class
+*.cache
+node_modules/
+exercise/
