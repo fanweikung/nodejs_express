@@ -4,6 +4,9 @@ const path = require('path');
 const app = express();
 const port = 3000;
 
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, './views'));
+
 // use express static with the directory
 app.use(express.static(path.join(__dirname, './static')));
 
