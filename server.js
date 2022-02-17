@@ -1,6 +1,12 @@
 const express = require('express');
 const path = require('path');
 
+const SpeakerService = require('./services/SpeakerService');
+const FeedbackService = require('./services/FeedbackService');
+
+const speakerService = new SpeakerService('./data/speakers.json');
+const feedbackService = new FeedbackService('./data/feedback.json');
+
 const routes = require('./routes'); // will default to ./routes/index.js
 
 const app = express();
@@ -13,7 +19,7 @@ app.set('views', path.join(__dirname, './views'));
 app.use(express.static(path.join(__dirname, './static')));
 
 // use another route to catch all; need to call the routes() function to get the router object back
-app.use('/', routes());
+app.use('/', routes({ speakerService, feedbackService }));
 
 // should  have a single place to mount/route
 // app.use('/speakers', speakersRoute());
