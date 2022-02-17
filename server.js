@@ -15,15 +15,8 @@ app.use(express.static(path.join(__dirname, './static')));
 // use another route to catch all; need to call the routes() function to get the router object back
 app.use('/', routes());
 
-// app.get('/', (request, response) => {
-//   // response.send('Hello Express :)')
-//   // response.sendFile(path.join(__dirname, 'static/index.html'));
-//   response.render('pages/index', { pageTitle: 'Welcome' });
-// });
-
-// app.get('/speakers', (request, response) => {
-//   response.sendFile(path.join(__dirname, './static/speakers.html'));
-// });
+// should  have a single place to mount/route
+// app.use('/speakers', speakersRoute());
 
 app.listen(port, () => {
   console.log(`Express Server listening on port ${port}`);
