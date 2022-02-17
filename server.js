@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const cookieSession = require('cookie-session');
 
 const SpeakerService = require('./services/SpeakerService');
 const FeedbackService = require('./services/FeedbackService');
@@ -12,8 +13,20 @@ const routes = require('./routes'); // will default to ./routes/index.js
 const app = express();
 const port = 3000;
 
+// to be cleaned up?
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, './views'));
+
+// make express trust cookies that are passed from reversed proxy
+app.set('trust proxy', 1);
+
+// session managment middleware
+app.use(
+  cookieSession({
+    name: 'session',
+    keys: ['AGEawgeASG', 'fasdgsajGAEr'],
+  })
+);
 
 // use express static middleware with the directory
 app.use(express.static(path.join(__dirname, './static')));
