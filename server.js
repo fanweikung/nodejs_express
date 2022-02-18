@@ -17,6 +17,8 @@ const port = 3000;
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, './views'));
 
+app.locals.siteName = 'ROUX Meetups ';
+
 // make express trust cookies that are passed from reversed proxy
 app.set('trust proxy', 1);
 
@@ -30,6 +32,18 @@ app.use(
 
 // use express static middleware with the directory
 app.use(express.static(path.join(__dirname, './static')));
+
+app.use(async (request, response, next) => {
+  // response.locals.someVariable = 'hello';
+  const names = await speakerService.getNames();
+  response.locals.speakerNames = names;
+  console.log(response.locals.speakerNames);
+  try {
+    return next();
+  } catch {
+    return next(err);
+  }
+});
 
 // use another route to catch all; need to call the routes() function to get the router object back
 app.use('/', routes({ speakerService, feedbackService }));
