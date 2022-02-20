@@ -9,9 +9,9 @@ module.exports = (params) => {
 
   router.get('/', async (request, response) => {
     const topSpeakers = await speakerService.getList();
-    console.log(topSpeakers);
+    const artwork = await speakerService.getAllArtwork();
 
-    response.render('layout', { pageTitle: 'Welcome', template: 'index', topSpeakers });
+    response.render('layout', { pageTitle: 'Welcome', template: 'index', topSpeakers, artwork });
   });
 
   router.use('/speakers', speakersRoute(params));
