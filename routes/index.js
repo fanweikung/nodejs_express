@@ -7,11 +7,19 @@ const router = express.Router();
 module.exports = (params) => {
   const { speakerService } = params;
 
-  router.get('/', async (request, response) => {
-    const topSpeakers = await speakerService.getList();
-    const artwork = await speakerService.getAllArtwork();
-
-    response.render('layout', { pageTitle: 'Welcome', template: 'index', topSpeakers, artwork });
+  router.get('/', async (request, response, next) => {
+    try {
+      const topSpeakers = await speakerService.getList();
+      const artwork = await speakerService.getAllArtwork();
+      return response.render('layout', {
+        pageTitle: 'Welcome',
+        template: 'index',
+        topSpeakers,
+        artwork,
+      });
+    } catch (err) {
+      return next(err);
+    }
   });
 
   router.use('/speakers', speakersRoute(params));
