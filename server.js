@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const cookieSession = require('cookie-session');
+const createError = require('http-errors');
 
 const SpeakerService = require('./services/SpeakerService');
 const FeedbackService = require('./services/FeedbackService');
@@ -50,6 +51,11 @@ app.use('/', routes({ speakerService, feedbackService }));
 
 // should  have a single place to mount/route
 // app.use('/speakers', speakersRoute());
+
+// if no matching route, returns 404 error
+app.use((request, response, next) => {
+  return next(createError(404, 'File not found'));
+});
 
 app.listen(port, () => {
   console.log(`Express Server listening on port ${port}`);
