@@ -57,6 +57,15 @@ app.use((request, response, next) => {
   return next(createError(404, 'File not found'));
 });
 
+// Express convention: 4 argument = Error handling middleware
+app.use((err, request, response, next) => {
+  response.locals.message = err.message;
+  const status = err.status || 500;
+  response.locals.status = status;
+  response.status(status);
+  response.render('error');
+});
+
 app.listen(port, () => {
   console.log(`Express Server listening on port ${port}`);
 });
