@@ -13,6 +13,9 @@ module.exports = (params) => {
 
       // In case an error happens, the request gets redirected to the get route, to the feedback route. And in the get route, we can now fetch those errors from the session object.
       const errors = request.session.feedback ? request.session.feedback.errors : false;
+
+      const successMessage = request.session.feedback ? request.session.feedback.message : false;
+
       request.session.feedback = {}; // reset the state of session object to empty
 
       return response.render('layout', {
@@ -20,6 +23,7 @@ module.exports = (params) => {
         template: 'feedback',
         feedback,
         errors, // then add errors as a template variable when render
+        successMessage,
       });
     } catch (err) {
       return next(err);
@@ -35,7 +39,7 @@ module.exports = (params) => {
       check('title').trim().isLength({ min: 3 }).escape().withMessage('A title is required'),
       check('message').trim().isLength({ min: 5 }).escape().withMessage('A message is required'),
     ],
-    (request, response) => {
+    async (request, response) => {
       const errors = validationResult(request); // function provided by express-validator to check if any errors
       if (!errors.isEmpty()) {
         // Createa a new object on request.session for evrything feedback related
@@ -48,8 +52,14 @@ module.exports = (params) => {
         // In case an error happens, the request gets redirected to the get route, to the feedback route. And in the get route, we can now fetch those errors from the session object.
         return response.redirect('/feedback');
       }
-      // console.log(request.body);
-      return response.send(`Feedback form posted`);
+
+      const { name, email, title, message } = request.body;
+      await feedbackService.addEntry(name, email, title, message);
+
+      request.session.feedback = {
+        message: 'Thank you for your feedback!',
+      };
+      return response.redirect('feedback');
     }
   );
 
