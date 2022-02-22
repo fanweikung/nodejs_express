@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const cookieSession = require('cookie-session');
 const createError = require('http-errors');
+const bodyParser = require('body-parser');
 
 const SpeakerService = require('./services/SpeakerService');
 const FeedbackService = require('./services/FeedbackService');
@@ -31,6 +32,9 @@ app.use(
   })
 );
 
+// use body-parser middleware to parse posted request form data
+app.use(bodyParser.urlencoded({ extended: true }));
+
 // use express static middleware with the directory
 app.use(express.static(path.join(__dirname, './static')));
 
@@ -38,7 +42,7 @@ app.use(async (request, response, next) => {
   // response.locals.someVariable = 'hello';
   const names = await speakerService.getNames();
   response.locals.speakerNames = names;
-  console.log(response.locals.speakerNames);
+  // console.log(response.locals.speakerNames);
   try {
     return next();
   } catch {
