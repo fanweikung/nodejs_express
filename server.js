@@ -35,6 +35,8 @@ app.use(
 // use body-parser middleware to parse posted request form data
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use(bodyParser.json()); // for rest api
+
 // use express static middleware with the directory
 app.use(express.static(path.join(__dirname, './static')));
 
